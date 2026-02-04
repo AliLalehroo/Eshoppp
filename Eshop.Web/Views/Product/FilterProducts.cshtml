@@ -1,0 +1,367 @@
+﻿@using Eshop.Application.Utils
+@using Eshop.Data.DTOs.ProductDto
+@using Eshop.Data.Entities.ProductEntities
+@model Eshop.Data.DTOs.ProductDto.FilterProductDto
+@{
+    ViewData["Title"] = "لیست محصولات";
+    var colors = (List<ProductColor>)ViewData["Colors"];
+}
+<section class="content">
+    <div class="container-fluid">
+        <!-- start filter in mobile -->
+        <div class="custom-filter d-lg-none d-block">
+            <form asp-area="" asp-controller="Product" asp-action="FilterProducts" method="get">
+                <button class="btn btn-filter-float border-0 bs-bg-gray-800 shadow-box px-3 rounded-3 position-fixed"
+                        style="z-index: 999; bottom: 76px;" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                    <i class="bi bi-funnel font-20 fw-bold text-white"></i>
+                    <span class="d-block font-14 text-white">فیلتر</span>
+                </button>
+
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight"
+                     aria-labelledby="offcanvasRightLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasRightLabel1">فیلتر ها</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="item-boxs position-sticky top-0">
+                            <div class="item-box">
+                                <div class="title">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h6 class="font-14">جستجوی محصول</h6>
+                                        <a class="btn border-0" data-bs-toggle="collapse" href="#collapseItemBoxSearchSide"
+                                           role="button" aria-expanded="false">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="desc collapse show" id="collapseItemBoxSearchSide">
+                                    <div class="search-form">
+                                        <div class="search-filed">
+                                            <label class="d-block">
+                                                <input asp-for="Title" id="title1" class="form-control search-input"
+                                                       placeholder="جستجوی محصولات ...">
+                                            </label>
+                                            <button class="btn search-btn main-color-two-bg rounded-circle"
+                                                    type="submit">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item-box">
+                                <div class="title">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h6 class="font-14">محدوده قیمت</h6>
+                                        <a class="btn border-0" data-bs-toggle="collapse" href="#collapsePrice1"
+                                           role="button" aria-expanded="false">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="desc collapse show" id="collapsePrice1">
+                                    <div class="filter-item-content">
+                                        <div class="form-group">
+                                            <label for="catRange"></label>
+                                            <input id="catRange" type="range" class="catRange" name="range[]">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="minPrice"></label>
+                                                <input type="number" name="" id="minPrice" asp-for="StartPrice" min="@Model.LeastPrice" max="@Model.MostPrice"
+                                                       class="form-control input-range-filter" placeholder="حداقل قیمت"/>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label for="maxPrice"></label>
+                                                <input type="number" id="maxPrice" asp-for="EndPrice" min="@Model.LeastPrice" max="@Model.MostPrice"
+                                                       class="form-control input-range-filter" placeholder="حداکثر قیمت"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item-box">
+                                <div class="title">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h6 class="font-14">فیلتر بر اساس رنگ</h6>
+                                        <a class="btn border-0" data-bs-toggle="collapse" href="#collapseItemBoxExist1"
+                                           role="button" aria-expanded="false">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="desc collapse show" id="collapseItemBoxExist1">
+                                    <div class="filter-item-content">
+                                        <div class="product-meta-color-items mt-4">
+                                            @if (colors != null && colors.Any())
+                                            {
+                                                <input type="radio" class="btn-check" asp-for="ColorId" id="option-null"
+                                                       autocomplete="off" value="">
+                                                <label class="btn btt-light" for="option-null">
+                                                    تمام رنگ ها
+                                                </label>
+                                                foreach (var color in colors.OrderBy(c => c.Title))
+                                                {
+                                                    <input type="radio" class="btn-check" asp-for="ColorId" id="option-@color.Id"
+                                                           autocomplete="off" value="@color.Id">
+                                                    <label class="btn btt-light" for="option-@color.Id">
+                                                        <span style="background-color: @color.ColorCode;"></span>
+                                                        @color.Title
+                                                    </label>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-center">
+                                <button class="btn submit-filter-btn btn-primary" type="submit">اعمال فیلتر</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- end filter mobile -->
+        <div class="row gy-3">
+            <div class="col-lg-3 d-lg-block d-none">
+                <form asp-area="" asp-controller="Product" asp-action="FilterProducts" id="filter-data-form" method="get">
+                   <input type="hidden" asp-for="PageId"/>
+                   <input type="hidden" asp-for="categoryUrl"/>
+                    <input type="hidden" name="ProductOrder" id="orderInput" value="@((int)Model.ProductOrder)"/>
+                    <div class="item-boxs position-sticky top-0">
+                        <div class="item-box">
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="font-14">جستجوی محصول</h6>
+                                    <a class="btn border-0" data-bs-toggle="collapse" href="#collapseItemBoxSearch"
+                                       role="button" aria-expanded="false">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="desc collapse show" id="collapseItemBoxSearch">
+                                <div class="search-form">
+                                    <div class="search-filed">
+                                        <label class="d-block">
+                                            <input class="form-control search-input" asp-for="Title" placeholder="جستجوی عنوان محصول  ...">
+                                        </label>
+                                        <button class="btn search-btn main-color-two-bg rounded-circle" type="submit">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-box">
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="font-14">محدوده قیمت</h6>
+                                    <a class="btn border-0" data-bs-toggle="collapse" href="#collapsePrice"
+                                       role="button" aria-expanded="false">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="desc collapse show" id="collapsePrice">
+                                <div class="filter-item-content">
+                                    <div class="form-group">
+                                        <label for="catRangeTwo"></label>
+                                        <input type="range" class="catRange" id="catRangeTwo" name="range[]">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label for="minPrice2"></label>
+                                            <input type="number" name="" id="minPrice2" asp-for="StartPrice" min="@Model.LeastPrice" max="@Model.MostPrice"
+                                                   class="form-control input-range-filter" placeholder="حداقل قیمت"/>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <label for="maxPrice2"></label>
+                                            <input type="number" id="maxPrice2" asp-for="EndPrice" min="@Model.LeastPrice" max="@Model.MostPrice"
+                                                   class="form-control input-range-filter" placeholder="حداکثر قیمت"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-box">
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="font-14">فیلتر بر اساس رنگ</h6>
+                                    <a class="btn border-0" data-bs-toggle="collapse" href="#collapseItemBoxExist"
+                                       role="button" aria-expanded="false">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="desc collapse show" id="collapseItemBoxExist">
+                                <div class="filter-item-content">
+                                    <div class="product-meta-color-items mt-4">
+                                        @if (colors != null && colors.Any())
+                                        {
+                                            <input type="radio" class="btn-check" asp-for="ColorId" id="option2-null"
+                                                   autocomplete="off" value="">
+                                            <label class="btn btt-light" for="option2-null">
+                                                تمام رنگ ها
+                                            </label>
+                                            foreach (var color in colors.OrderBy(c => c.Title))
+                                            {
+                                                <input type="radio" class="btn-check" asp-for="ColorId" id="option2-@color.Id"
+                                                       autocomplete="off" value="@color.Id">
+                                                <label class="btn btt-light" for="option2-@color.Id">
+                                                    <span style="background-color: @color.ColorCode;"></span>
+                                                    @color.Title
+                                                </label>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <button class="btn submit-filter-btn btn-primary" type="submit">اعمال فیلتر</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-9">
+                <div class="category-sort mb-3">
+                    <div class="content-box">
+                        <div class="container-fluid">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="box_filter d-lg-block d-none">
+                                    <ul class="list-inline text-start mb-0">
+                                        <li class="list-inline-item title-font ms-0">مرتب سازی بر اساس :</li>
+                                        <li class="list-inline-item">
+                                            <a href="#" class="order-item" data-order-index="0">جدید ترین</a>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <a href="#" class="order-item" data-order-index="1">قدیمی ترین</a>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <a href="#" class="order-item" data-order-index="2">گران ترین</a>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <a href="#" class="order-item" data-order-index="3">ارزان ترین</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="box_filter_counter fs-6"><i class="bi bi-card-list me-2"></i>@Model.AllEntitiesCount.ToString("#,0") محصول</div>
+                            </div>
+                            <div class="d-lg-none d-block">
+
+                                <label for="" class="form-label my-3 fw-bold">مرتب سازی بر اساس</label>
+                                <select onchange="submitOrder(this.value)" asp-items="@Html.GetEnumSelectList<FilterProductOrder>()" class="form-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="category-pro">
+                    <div class="row g-3">
+                        @if (Model.Data.Any())
+                        {
+                            @foreach (var product in Model.Data)
+                            {
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="product-box border-ui">
+                                        <a asp-area="" asp-controller="Product" asp-action="ProductDetail" asp-route-productId="@product.Id">
+                                            <div class="product-image">
+                                                <img src="@(PathExtension.ProductImageImage + product.MainImageName)" loading="lazy" alt="تصویر محصول"
+                                                     class="img-fluid one-image">
+                                            </div>
+                                            <div class="product-title mb-3">
+                                                <div class="title">
+                                                    <span class="text-muted text-overflow-1">
+                                                        @product.SelectedCategories.First().Category.Title
+                                                    </span>
+                                                    <p class="text-overflow-1 mt-2">@product.Title.LongString40()</p>
+                                                </div>
+                                                <div class="rating">
+                                                    <div class="number"><span class="text-muted font-12">(15+) 4.8</span></div>
+                                                    <div class="icon"><i class="bi bi-star-fill"></i></div>
+                                                </div>
+                                            </div>
+                                            <div class="product-action">
+                                                <div class="price">
+                                                    <p class="new-price">@product.BasePrice.ToRial()</p>
+                                                </div>
+                                                <div>
+                                                    @if (product.ProductVariants.Any())
+                                                    {
+                                                        @foreach (var variant in product.ProductVariants.Take(3))
+                                                        {
+                                                            <span style="background: @variant.ColorCode" class="filter-product-color-item"></span>
+                                                        }
+                                                        @if (product.ProductVariants.Count > 3)
+                                                        {
+                                                            <span>...</span>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    @if (!string.IsNullOrEmpty(Model.Title))
+                                    {
+                                        <p class="mb-0">.محصولی عنوان @Model.Title یافت نشد</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="mb-0">.محصولی یافت نشد</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-12">
+                            <partial name="_SitePaging" model="@Model.GetCurrentPaging()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section SiteFooterSection
+{
+    <script src="/Site/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            ////slider range
+            $(".catRange").slider({
+                id: "slider5b",
+                min: @Model.LeastPrice,
+                max: @Model.MostPrice,
+                range: true,
+                step: 10000,
+                value: [@Model.LeastPrice, @Model.MostPrice],
+                rtl: 'false',
+                formatter: function formatter(val) {
+                    if (Array.isArray(val)) {
+                        return val[0] + " تومان " + "  تا   " + val[1] + " تومان ";
+                    } else {
+                        return val;
+                    }
+                },
+            });
+        });
+    </script>
+}
+
+@section SiteHeaderSection
+{
+    <link rel="stylesheet" href="/Site/plugin/bootstrap-slider/bootstrap-slider.min.css">
+}

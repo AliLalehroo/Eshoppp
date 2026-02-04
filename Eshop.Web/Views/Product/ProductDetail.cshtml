@@ -1,0 +1,1169 @@
+﻿@using Eshop.Application.Utils
+@using Eshop.Data.DTOs.OrderDto
+@using Eshop.Data.Entities.ProductEntities
+@model Eshop.Data.DTOs.ProductDto.ProductDetailDto
+@{
+    ViewData["Title"] = Model.Title;
+    var products = (List<Product>)ViewData["SimilarProducts"];
+}
+<section class="content">
+    <section class="bread-crumb py-0 mb-3">
+        <div class="container-fluid">
+            <div class="content-box">
+                <div class="container-fluid">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="/" class="font-14 text-muted">خانه</a></li>
+                            <li class="breadcrumb-item"><a href="/products-list" class="font-14 text-muted">فروشگاه</a></li>
+                            <li class="breadcrumb-item active main-color-one-color font-14" aria-current="page">
+                                @Model.SelectedCategories.First().Category.Title
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container-fluid">
+        <div class="content-box">
+            <div class="row gy-3">
+                <div class="col-lg-4">
+                    <div class="pro_gallery">
+                        <div class="icon-product-box">
+                            <div class="icon-product-box-item hint--right" data-bs-toggle="modal"
+                                 data-bs-target="#videoModal" data-hint="ویدیو معرفی">
+                                <i class="bi bi-play-circle"></i>
+                            </div>
+                            <div class="icon-product-box-item hint--right" data-bs-toggle="modal"
+                                 data-bs-target="#shareModal" data-hint="اشتراک گذاری">
+                                <i class="bi bi-share-fill"></i>
+                            </div>
+                            <div class="icon-product-box-item hint--right" id="favorite-btn" data-product-id="@Model.Id" data-hint="افزودن به محصولات مورد علاقه">
+                                <i class="bi bi-heart" id="favorite-icon"></i>
+                            </div>
+                            <div class="icon-product-box-item hint--right" data-hint="مقایسه محصول">
+                                <i class="bi bi-arrow-left-right"></i>
+                            </div>
+                            <div class="icon-product-box-item hint--right" data-hint="نمودار قیمت"
+                                 data-bs-toggle="modal" data-bs-target="#chartModal">
+                                <i class="bi bi-bar-chart"></i>
+                            </div>
+                        </div>
+                        <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
+                             class="swiper product-gallery">
+                            <div class="swiper-wrapper" title="برای بزرگنمایی تصویر دابل کلیک کنید">
+                                <div class="swiper-slide">
+                                    <div class="swiper-zoom-container">
+                                        <img class="img-fluid" src="@(PathExtension.ProductImageImage + Model.MainImageName)" alt="" />
+                                    </div>
+                                </div>
+                                @if (Model.ProductGalleries.Any())
+                                {
+                                    foreach (var gallery in Model.ProductGalleries.OrderBy(g => g.Order))
+                                    {
+                                        <div class="swiper-slide">
+                                            <div class="swiper-zoom-container">
+                                                <img class="img-fluid" src="@(PathExtension.ProductGalleryImage + gallery.ImageName)" alt="" />
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div class="swiper-button-next d-none d-lg-flex"></div>
+                            <div class="swiper-button-prev d-none d-lg-flex"></div>
+                            <div class="swiper-pagination d-none d-lg-block"></div>
+                        </div>
+                        <div class="swiper product-gallery-thumb">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img class="img-fluid" src="@(PathExtension.ProductImageImage + Model.MainImageName)" alt="" />
+                                </div>
+                                @if (Model.ProductGalleries.Any())
+                                {
+                                    foreach (var gallery in Model.ProductGalleries.OrderBy(g => g.Order))
+                                    {
+                                        <div class="swiper-slide">
+                                            <img class="img-fluid" src="@(PathExtension.ProductGalleryImage + gallery.ImageName)" alt="" />
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex my-3">
+                        <a href="">
+                            <i class="bi bi-info-circle me-1"></i>
+                            <span class="me-1 font-14">گزارش نادرستی مشخصات</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="product-meta">
+                        @if (Model.ProductSelectedBrand != null)
+                        {
+                            <nav aria-label="breadcrumb" class="mb-3">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item active" aria-current="page">
+                                        <a class="main-color-one-color font-16" href="">
+                                            @Model.ProductSelectedBrand.Title
+                                        </a>
+                                    </li>
+                                </ol>
+                            </nav>
+                        }
+                        <div class="title mt-md-0 mt-3">
+                            <h6 class="font-16 mb-2">
+                                @Model.Title
+                            </h6>
+                            <div class="d-flex align-items-center pb-2">
+                                <div class="star">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+                                    <i class="bi bi-star"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <a href="" class="main-color-one-color font-14">
+                                        <span>11</span>
+                                        <span>دیدگاه</span>
+                                    </a>
+                                </div>
+                                <div class="ms-3">
+                                    <a href="" class="main-color-one-color font-14">
+                                        <span>3</span>
+                                        <span> پرسش</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-feature py-2">
+                            @if (Model.ProductFeatures.Any())
+                            {
+                                <div class="product-meta-feature-items">
+                                    <h5 class="title font-16 mb-2 icon-circle">ویژگی های کالا</h5>
+                                    <ul class="navbar-nav">
+                                        @foreach (var item in Model.ProductFeatures.Take(4).OrderBy(f => f.Order))
+                                        {
+                                            <li class="nav item"><span>@item.Title:</span><strong>@item.Value</strong></li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            <div class="product-meta-color mt-4">
+                                <h5 class="font-16 icon-circle">
+                                    انتخاب رنگ کالا
+                                </h5>
+                                <div class="product-meta-color-items" id="variants">
+                                    @if (Model.ProductVariants.Any())
+                                    {
+                                        @foreach (var item in Model.ProductVariants)
+                                        {
+                                            <input type="radio" class="btn-check" value="@item.Id" variant-price="@item.Price" name="variantId" id="option-@item.Id" 
+                                                   autocomplete="off" checked="">
+                                            <label class="btn " for="option-@item.Id">
+                                                <span style="background-color: @item.ColorCode"></span>
+                                                @item.ColorTitle
+                                            </label>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="product-alert">
+                                <i class="bi bi-info-circle-fill me-1"></i>
+                                <span class="text-justify">امکان برگشت کالا با دلیل "انصراف از خرید" تنها در صورتی مورد قبول است که پلمب کالا باز نشده باشد.</span>
+                            </div>
+                            <div class="product-alert mt-2">
+                                <i class="bi bi-check-circle me-1"></i>
+                                <span class="text-justify">
+                                    از سه روش زیر می‌توان با سامانه همتا ارتباط برقرار نموده و فرآیند فعال سازی دستگاه موبایل را انجام داد: 1. کد دستوری #۷۷۷۷* 2. اپلیکشین همتا 3. سایت اینترنتی به آدرس www.hamta.ntsw.ir
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="se-cart border-ui">
+                        <div class="se-cart-item">
+                            <i class="bi bi-shield-check me-1 font-20"></i>
+                            <h6 class="d-inline font-16 fw-normal">گارانتی اصالت و سلامت فیزیکی کالا</h6>
+                        </div>
+                        @if (Model.ProductVariants.Any(v => v.StockCount > 0))
+                        {
+                            <div class="se-cart-item">
+                                <div class="d-flex">
+                                    <div>
+                                        <i class="bi bi-house font-20"></i>
+                                    </div>
+                                    <div class="text-start ms-3">
+                                        <h6 class="fw-normal font-16">موجود در انبار فروشنده</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="se-cart-item d-lg-flex d-none justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-info-circle font-18 me-2"></i>
+                                    <span class="font-16">
+                                        قیمت محصول
+                                    </span>
+                                </div>
+                                <div class="price d-flex flex-column justify-content-end">
+                                    <div class="d-flex align-items-center">
+                                        <strong>تومان </strong><span class="fw-bold fs-3 def-color" product-price="@Model.BasePrice" id="base-price">@Model.BasePrice.ToString("#,0")</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="se-cart-item">
+                                <partial name="_AddProductToOrderForm" model="new SubmitOrderDetailDto{ProductId = Model.Id}"/>
+                            </div>
+                        }
+                    </div>
+                    <a href="">
+                        <div class="d-flex border rounded-3 align-items-center justify-content-between mt-3 px-3 py-2">
+                            <div>
+                                <i class="bi bi-info-circle"></i>
+                                <span class="font-14">فرایند قیمت گذاری و نظارت بر قیمت</span>
+                            </div>
+                            <div>
+                                <i class="bi bi-chevron-left"></i>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="d-flex my-3">
+                        <a href="">
+                            <i class="bi bi-tag"></i>
+                            <span class="me-1 font-14">آیا قیمت مناسب تری سارغ دارید</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="shop-feature">
+                        <div class="container-fluid">
+                            <nav class="navbar">
+                                <ul class="navbar-nav justify-content-md-between justify-content-center">
+                                    <li class="nav-item d-flex align-items-center">
+                                        <img alt="" src="/Site/image/feature/box.png">
+                                        <span>امکان تحویل اکسپرس</span>
+                                    </li>
+                                    <li class="nav-item d-flex align-items-center">
+                                        <img alt="" src="/Site/image/feature/headphone.png">
+                                        <span>24 ساعته 7 روز هفته</span>
+                                    </li>
+                                    <li class="nav-item d-flex align-items-center">
+                                        <img alt="" src="/Site/image/feature/safe.png">
+                                        <span>
+                                            امکان پرداخت در محل
+                                        </span>
+                                    </li>
+                                    <li class="nav-item d-flex align-items-center">
+                                        <img alt="" src="/Site/image/feature/seven.png">
+                                        <span>
+                                            7 روز ضمانت بازگشت کالا
+                                        </span>
+                                    </li>
+                                    <li class="nav-item d-flex align-items-center">
+                                        <img alt="" src="/Site/image/feature/money.png">
+                                        <span>
+                                            ضمانت اصالت کالا
+                                        </span>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="product-desc">
+    <div class="container-fluid">
+        <div class="product-desc-tab">
+            <ul class="nav justify-content-between" id="productTab" role="tablist">
+                <li class="nav-item">
+                    <button aria-selected="true" class="active waves-effect waves-light"
+                            data-bs-target="#productDescLess-pane" data-bs-toggle="tab" id="productDescLess"
+                            role="button" type="button">
+                        توضیحات کالا
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button aria-selected="true" class=" waves-effect waves-light"
+                            data-bs-target="#productDesc-pane" data-bs-toggle="tab" id="productDesc"
+                            role="button" type="button">
+                        مشخصات کالا
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button aria-selected="false" class=" waves-effect waves-light"
+                            data-bs-target="#productTable-pane" data-bs-toggle="tab" id="productTable"
+                            role="button" type="button">
+                        ویژگی های محصول
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button aria-selected="false" class="d-flex waves-effect waves-light"
+                            data-bs-target="#productComment-pane" data-bs-toggle="tab" id="productComment"
+                            role="button" type="button">
+                        نظرات <span class="badge main-color-one-bg ms-2 lh-sm">17</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button aria-selected="false" class="d-flex waves-effect waves-light"
+                            data-bs-target="#productAnswer-pane" data-bs-toggle="tab" id="productAnswer"
+                            role="button" type="button">
+                        پرسش و پاسخ <span class="badge main-color-one-bg ms-2 lh-sm">8</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="row mt-4 pt-2">
+            <div class="col-xl-9">
+                <div class="content-box">
+                    <div class="product-descs" id="prodesc">
+                        <div class="product-desc">
+                            <div class="product-desc-tab-content">
+                                <div class="tab-content" id="productTabContent">
+                                    <div class="tab-pane fade show active product-desc-less-contents"
+                                         id="productDescLess-pane">
+                                        <div class="product-desc-content">
+                                            <h6 class="font-22 mb-2 title-font title-line-bottom">معرفی محصول</h6>
+                                            <div class="desc-text">
+                                                @Html.Raw(Model.ShortDescription)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade product-desc-contents" id="productDesc-pane">
+                                        <div class="product-desc-content">
+                                            <input class="read-more-state" id="readMore2" type="checkbox" />
+                                            <div class="read-more-wrap">
+                                                <h6 class="font-26 mb-2 title-font title-line-bottom">
+                                                    توضیحات تکمیلی
+                                                </h6>
+                                                <div class="desc-text">
+                                                    @Html.Raw(Model.ShortDescription)
+                                                </div>
+                                                <div class="read-more-target">
+                                                    <div class="desc-text">
+                                                        @Html.Raw(Model.Description)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label class="read-more-trigger" for="readMore2"></label>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="productTable-pane">
+                                        <div aria-labelledby="#productTable"
+                                             class="tab-pane fade active show" role="tabpanel">
+                                            <h6 class="font-26 mb-2 title-font title-line-bottom">مشخصات فنی</h6>
+                                            <div class="box_list mt-4">
+                                                <p class="title">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                         height="16" fill="currentColor"
+                                                         class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                                                        <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z">
+                                                        </path>
+                                                    </svg>
+                                                    مشخصات کلی
+                                                </p>
+                                                <div>
+                                                    <ul class="param_list list-inline">
+                                                        @if (Model.ProductFeatures.Any())
+                                                        {
+                                                            @foreach (var item in Model.ProductFeatures.OrderBy(f => f.Order))
+                                                            {
+                                                                <li class="list-inline-item col-md-3 pe-md-1 pe-md-3 p-0 m-0">
+                                                                    <div class="box_params_list">
+                                                                        <p class="block border_right_custom1">
+                                                                            @item.Title
+                                                                        </p>
+                                                                    </div>
+                                                                </li>
+                                                                <li class="list-inline-item col-md-8 p-0 m-0">
+                                                                    <div class="box_params_list">
+                                                                        <p class="block border_right_custom2">
+                                                                            @item.Value
+                                                                        </p>
+                                                                    </div>
+                                                                </li>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="alert alert-info">
+                                                                <p class="mb-0">مشخصاتی برای محصول تعریف نشده است.</p>
+                                                            </div>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade product-comment-content" id="productComment-pane">
+
+                                        <div class="comment-form">
+                                            <h6 class="font-26 mb-2 title-font title-line-bottom">
+                                                نظرت در مورد این
+                                                محصول
+                                                چیه؟
+                                            </h6>
+                                            <p class="font-14 text-muted mt-2">
+                                                برای ثبت نظر، از طریق دکمه افزودن
+                                                دیدگاه جدید
+                                                نمایید. اگر این محصول را قبلا خریده باشید، نظر شما به عنوان خریدار
+                                                ثبت خواهد
+                                                شد.
+                                            </p>
+                                            <form action="">
+                                                <div class="row gy-4">
+                                                    <div class="col-md-4">
+                                                        <div class="product-rateing position-sticky top-0">
+                                                            <div class="row gy-2 align-items-center">
+                                                                <div class="number">
+                                                                    <h4 class="fw-light">متوسط امتیاز ها</h4>
+                                                                    <h2>3.00</h2>
+                                                                    <div class="star">
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star"></i>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="prog-rating">
+                                                                    <div class="item w-100 mb-2">
+                                                                        <div class="d-flex align-items-center flex-wrap">
+                                                                            <span class="font-14">5 ستاره</span>
+                                                                            <div class="progress flex-grow-1 mx-2"
+                                                                                 style="height: 7px;">
+                                                                                <div aria-valuemax="100"
+                                                                                     aria-valuemin="0"
+                                                                                     aria-valuenow="25"
+                                                                                     class="progress-bar"
+                                                                                     role="progressbar"
+                                                                                     style="width: 25%"></div>
+                                                                            </div>
+                                                                            <span class="font-14">5</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="item w-100 mb-2">
+                                                                        <div class="d-flex align-items-center flex-wrap">
+                                                                            <span class="font-14">4 ستاره</span>
+                                                                            <div class="progress flex-grow-1 mx-2"
+                                                                                 style="height: 7px;">
+                                                                                <div aria-valuemax="100"
+                                                                                     aria-valuemin="0"
+                                                                                     aria-valuenow="60"
+                                                                                     class="progress-bar"
+                                                                                     role="progressbar"
+                                                                                     style="width: 60%"></div>
+                                                                            </div>
+                                                                            <span class="font-14">17</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="item w-100 mb-2">
+                                                                        <div class="d-flex align-items-center flex-wrap">
+                                                                            <span class="font-14">3 ستاره</span>
+                                                                            <div class="progress flex-grow-1 mx-2"
+                                                                                 style="height: 7px;">
+                                                                                <div aria-valuemax="100"
+                                                                                     aria-valuemin="0"
+                                                                                     aria-valuenow="78"
+                                                                                     class="progress-bar"
+                                                                                     role="progressbar"
+                                                                                     style="width: 78%"></div>
+                                                                            </div>
+                                                                            <span class="font-14">85</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="item w-100 mb-2">
+                                                                        <div class="d-flex align-items-center flex-wrap">
+                                                                            <span class="font-14">2 ستاره</span>
+                                                                            <div class="progress flex-grow-1 mx-2"
+                                                                                 style="height: 7px;">
+                                                                                <div aria-valuemax="100"
+                                                                                     aria-valuemin="0"
+                                                                                     aria-valuenow="4"
+                                                                                     class="progress-bar"
+                                                                                     role="progressbar"
+                                                                                     style="width: 4%"></div>
+                                                                            </div>
+                                                                            <span class="font-14">3</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="item w-100">
+                                                                        <div class="d-flex align-items-center flex-wrap">
+                                                                            <span class="font-14">1 ستاره</span>
+                                                                            <div class="progress flex-grow-1 mx-2"
+                                                                                 style="height: 7px;">
+                                                                                <div aria-valuemax="100"
+                                                                                     aria-valuemin="0"
+                                                                                     aria-valuenow="82"
+                                                                                     class="progress-bar"
+                                                                                     role="progressbar"
+                                                                                     style="width: 82%"></div>
+                                                                            </div>
+                                                                            <span class="font-14">652</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-floating mb-3 form-group">
+                                                                    <input class="form-control"
+                                                                           id="floatingInputEmail1"
+                                                                           placeholder="ایمیل خود را وارد کنید"
+                                                                           type="email">
+                                                                    <label for="floatingInputEmail1">
+                                                                        ایمیل خود را
+                                                                        وارد
+                                                                        کنید
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-floating mb-3 form-group">
+                                                                    <input class="form-control"
+                                                                           id="floatingInputName"
+                                                                           placeholder="نام خود را وارد کنید"
+                                                                           type="text">
+                                                                    <label for="floatingInputName">
+                                                                        نام خود را وارد
+                                                                        کنید
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <div class="form-group form-check">
+                                                                    <input class="form-check-input"
+                                                                           id="rememberComment"
+                                                                           type="checkbox">
+                                                                    <label class="form-check-label d-block"
+                                                                           for="rememberComment">
+                                                                        ذخیره
+                                                                        نام، ایمیل و وبسایت من در مرورگر برای زمانی
+                                                                        که دوباره
+                                                                        دیدگاهی می‌نویسم.
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <div class="form-group">
+                                                                    <label class="my-3" for="commentRating">
+                                                                        امتیاز
+                                                                        شما
+                                                                    </label>
+                                                                    <fieldset class="rating" id="commentRating">
+                                                                        <input id="star5" name="rating" required
+                                                                               type="radio"
+                                                                               value="5" />
+                                                                        <label for="star5">5 stars</label>
+                                                                        <input id="star4" name="rating" required
+                                                                               type="radio"
+                                                                               value="4" />
+                                                                        <label for="star4">4 stars</label>
+                                                                        <input id="star3" name="rating" required
+                                                                               type="radio"
+                                                                               value="3" />
+                                                                        <label for="star3">3 stars</label>
+                                                                        <input id="star2" name="rating" required
+                                                                               type="radio"
+                                                                               value="2" />
+                                                                        <label for="star2">2 stars</label>
+                                                                        <input id="star1" name="rating" required
+                                                                               type="radio"
+                                                                               value="1" />
+                                                                        <label for="star1">1 star</label>
+                                                                    </fieldset>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <div class="form-floating">
+                                                                    <textarea class="form-control"
+                                                                              id="floatingTextarea2"
+                                                                              placeholder="Leave a comment here"
+                                                                              style="height: 150px"></textarea>
+                                                                    <label for="floatingTextarea2">متن نظر!</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group mt-3">
+                                                                    <label class="text-success mb-2 fw-bold font-16"
+                                                                           for="tags-pos">
+                                                                        نقاط
+                                                                        قوت
+                                                                    </label>
+                                                                    <input class="commentTags form-control"
+                                                                           id="tags-pos"
+                                                                           name="tags-pos"
+                                                                           placeholder="با کلید اینتر اضافه کنید">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group mt-3">
+                                                                    <label class="text-danger fw-bold mb-2 font-16"
+                                                                           for="tags-neg">
+                                                                        نقاط
+                                                                        ضعف
+                                                                    </label>
+                                                                    <input class="commentTags form-control"
+                                                                           id="tags-neg"
+                                                                           name="tags-neg"
+                                                                           placeholder="با کلید اینتر اضافه کنید">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <button type="submit"
+                                                                        class="btn main-color-two-bg px-5 btn-lg border-0">
+                                                                    ثبت نظر
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="box_filter mt-5 pb-3">
+                                            <div class="row align-items-end">
+                                                <div class="col-md-4 bf1">
+                                                    <h4 class="title-font title-line-bottom">نظرات کاربران</h4>
+                                                </div>
+                                                <div class="col-md-8 bf2">
+                                                    <ul class="list-inline text-end mb-0">
+                                                        <li class="list-inline-item title-font">
+                                                            مرتب سازی بر اساس
+                                                            :
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a href="#">نظر خریداران</a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a class="active_custom"
+                                                               href="#">
+                                                                مفیدترین
+                                                                نظرات
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a href="#">جدیدترین نظرات</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="box_users_comment mt-3 p-4">
+                                            <div class="row">
+                                                <div class="col-lg-3">
+                                                    <div class="box_message_light">
+                                                        <svg class="bi bi-cart3" fill="currentColor" height="16"
+                                                             viewBox="0 0 16 16" width="16"
+                                                             xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+                                                        </svg>
+                                                        خریدار این محصول
+                                                    </div>
+                                                    <div class="box_shopping mt-lg-5 mt-3">
+                                                        <span>خریداری شده از :</span>
+                                                        <p>
+                                                            <i class="bi bi-shop"></i>
+                                                            <a href="#">اسمارت الکترونیک</a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="box_message_dislike mt-2">
+                                                        <i class="bi bi-hand-thumbs-down"></i>
+                                                        خرید این محصول را توصیه نمی
+                                                        کنم
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-9 pr-5" style="margin-top:-10px">
+                                                    <div class="box_comment_header mt-4 mt-lg-0">
+                                                        <span class="span1">نخرید</span>
+                                                        <br>
+                                                        <span class="span2">
+                                                            توسط مسلم ابراهیمی در تاریخ ۳۰ شهریور ۱۳۹۷
+                                                        </span>
+                                                    </div>
+                                                    <div class="border-bottom mt-3"></div>
+                                                    <div class="row mt-4">
+                                                        <div class="col-md-6 evaluation-positive">
+                                                            <div class="list-inline">
+                                                                <span>نقاط قوت</span>
+                                                                <div class="list-inline-item ml-3">هیچی</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 evaluation-negative">
+                                                            <div class="list-inline">
+                                                                <span>نقاط ضعف</span>
+                                                                <div class="list-inline-item ml-3">
+                                                                    کیفیت صدا , موقع
+                                                                    زنگ اصلا
+                                                                    صدا
+                                                                    نمیره
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-4">
+                                                        <div class="col-md-12">
+                                                            <p class="box_text_comment">
+                                                                دوستان سلام من این رو خریدم اصلا خوب نیست صدا نمیره
+                                                                اونایی
+                                                                که
+                                                                میگن خوبه
+                                                                همشون
+                                                                فروشنده این بسته هستن با اکانت هایی که ساختن میام
+                                                                الکی نظر
+                                                                میدن
+                                                                نخرید به خدا
+                                                                نخرید اصلا خوب نیست
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row justify-content-end">
+                                                        <div class="col-12">
+                                                            <div class="comments_likes">
+                                                                <span class="mr-4 mt-1">
+                                                                    ایا این نظر برایتان مفید بود ؟
+                                                                </span>
+                                                                <a class="btn btn-like btn-like-like mt-1 mt-md-0 ms-2"
+                                                                   href="#">
+                                                                    <i class="bi bi-hand-thumbs-up"></i> 70
+                                                                </a>
+                                                                <a class="btn btn-like btn-like-dislike mt-1 mt-md-0"
+                                                                   href="#">
+                                                                    <i class="bi bi-hand-thumbs-down"></i> 7
+                                                                </a>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box_users_comment mt-3 p-4">
+                                            <div class="row">
+                                                <div class="col-lg-3">
+                                                    <div class="box_message_light">
+                                                        <svg class="bi bi-cart3" fill="currentColor" height="16"
+                                                             viewBox="0 0 16 16" width="16"
+                                                             xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+                                                        </svg>
+                                                        خریدار این محصول
+                                                    </div>
+                                                    <div class="box_shopping mt-lg-5 mt-3">
+                                                        <span>خریداری شده از :</span>
+                                                        <p>
+                                                            <i class="bi bi-shop"></i>
+                                                            <a href="#">اسمارت الکترونیک</a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="box_message_dislike text-success mt-2">
+                                                        <i class="bi bi-hand-thumbs-up"></i>
+                                                        خرید این محصول را توصیه می
+                                                        کنم
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-9 pr-5" style="margin-top:-10px">
+                                                    <div class="box_comment_header mt-4 mt-lg-0">
+                                                        <span class="span1">نخرید</span>
+                                                        <br>
+                                                        <span class="span2">
+                                                            توسط مسلم ابراهیمی در تاریخ ۳۰ شهریور ۱۳۹۷
+                                                        </span>
+                                                    </div>
+                                                    <div class="border-bottom mt-3"></div>
+                                                    <div class="row mt-4">
+                                                        <div class="col-md-6 evaluation-positive">
+                                                            <div class="list-inline">
+                                                                <span>نقاط قوت</span>
+                                                                <div class="list-inline-item ml-3">هیچی</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 evaluation-negative">
+                                                            <div class="list-inline">
+                                                                <span>نقاط ضعف</span>
+                                                                <div class="list-inline-item ml-3">
+                                                                    کیفیت صدا , موقع
+                                                                    زنگ اصلا
+                                                                    صدا
+                                                                    نمیره
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-4">
+                                                        <div class="col-md-12">
+                                                            <p class="box_text_comment">
+                                                                دوستان سلام من این رو خریدم اصلا خوب نیست صدا نمیره
+                                                                اونایی
+                                                                که
+                                                                میگن خوبه
+                                                                همشون
+                                                                فروشنده این بسته هستن با اکانت هایی که ساختن میام
+                                                                الکی نظر
+                                                                میدن
+                                                                نخرید به خدا
+                                                                نخرید اصلا خوب نیست
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row justify-content-end">
+                                                        <div class="col-12">
+                                                            <div class="comments_likes">
+                                                                <span class="mr-4 mt-1">
+                                                                    ایا این نظر برایتان مفید بود ؟
+                                                                </span>
+                                                                <a class="btn btn-like btn-like-like mt-1 mt-md-0 ms-2"
+                                                                   href="#">
+                                                                    <i class="bi bi-hand-thumbs-up"></i> 70
+                                                                </a>
+                                                                <a class="btn btn-like btn-like-dislike mt-1 mt-md-0"
+                                                                   href="#">
+                                                                    <i class="bi bi-hand-thumbs-down"></i> 7
+                                                                </a>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="container">
+                                            <div class="text-center">
+                                                <a class="btn main-color-one-bg border-0" href="">
+                                                    بارگذاری کامنت
+                                                    ها
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div aria-labelledby="#productAnswer" class="tab-pane fade"
+                                         id="productAnswer-pane"
+                                         role="tabpanel">
+                                        <h4 class="title-font title-line-bottom">پرسش و پاسخ</h4>
+                                        <span class="fw-bold d-block mt-2 text-muted font-12">
+                                            پرسش خود را در مورد محصول مطرح
+                                            نمایید
+                                        </span>
+
+                                        <div class="box_questions mt-4">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label class="d-block">
+                                                        <textarea class="form-control"
+                                                                  placeholder="هر سوالی در مورد این محصول به ذهنتان میرسید بپرسید!"
+                                                                  rows="7"></textarea>
+                                                    </label>
+                                                    <button class="btn main-color-three-bg mt-3 btn-lg"
+                                                            type="submit">
+                                                        ثبت پرسش
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                            <div class="box_filter mt-5 pb-3">
+                                                <div class="row align-items-end">
+                                                    <div class="col-md-4 bf1">
+                                                        <h4 class="title-font title-line-bottom">
+                                                            پرسش های
+                                                            کاربران
+                                                        </h4>
+                                                    </div>
+                                                    <div class="col-md-8 bf2">
+                                                        <ul class="list-inline text-end mb-0">
+                                                            <li class="list-inline-item title-font">
+                                                                مرتب سازی بر
+                                                                اساس :
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <a href="#">
+                                                                    نظر
+                                                                    خریداران
+                                                                </a>
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <a class="active_custom"
+                                                                   href="#">
+                                                                    مفیدترین
+                                                                    نظرات
+                                                                </a>
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <a href="#">
+                                                                    جدیدترین
+                                                                    نظرات
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="box_questions mt-4">
+                                                <div class="row bs-qu">
+                                                    <div class="col-lg-2 bq1 text-center">
+                                                        <i class="bi bi-question-circle-fill"></i>
+                                                        <br>
+                                                        <span class="span1">پرسش</span>
+                                                        <br>
+                                                        <span class="span2">فرزاد عباسقلی زاده</span>
+                                                    </div>
+                                                    <div class="col-lg-10 bq2">
+                                                        <p>سلام چطوری دو گوشی همزمان پخش میکنه ؟ </p>
+
+                                                        <div class="row bq-footer">
+                                                            <div class="col-md-5 col-6 my-flex-align-end">
+                                                                <span class="date">
+                                                                    ۱۶ مهر ۱۳۹۷
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-md-7 col-6 text-end pe-0">
+                                                                <a class="d-none d-sm-block" href="#">
+                                                                    <span class="main-color-one-color">به این پرسش پاسخ دهید (۱ پاسخ)</span>
+                                                                </a><a class="d-sm-none d-block" href="#">پاسخ</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row bs-qu">
+                                                    <div class="col-lg-2 bq1 text-center">
+                                                        <i class="bi bi-chat-dots-fill"></i>
+                                                        <br>
+                                                        <span class="span1">پاسخ</span>
+                                                        <br>
+                                                        <span class="span2">حسین زارع</span>
+                                                    </div>
+                                                    <div class="col-lg-10 bq2 bg-transparent">
+                                                        <p>
+                                                            درباره راه اندازی: (خیلی دربارش پرسیده بودند): اول:
+                                                            بلوتوث گوشی خود
+                                                            را
+                                                            خاموش کنید.
+                                                            دوم: لطفا
+                                                            کلید های چند منظوره در هر دو هدفون را همزمان فشار دهید
+                                                        </p>
+                                                        <div class="row align-items-center bq-footer">
+                                                            <div class="col-lg-5 col-12 my-flex-align-end">
+                                                                <span class="date">
+                                                                    ۲۲ مهر ۱۳۹۷
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-lg-7 col-12 text-start p-0 ">
+                                                                <div class="comments_likes">
+                                                                    <span class="mr-4 mt-1">
+                                                                        ایا این نظر برایتان مفید بود ؟
+                                                                    </span>
+                                                                    <a class="btn btn-like btn-like-like mt-1 mt-md-0 ms-2"
+                                                                       href="#">
+                                                                        <i class="bi bi-hand-thumbs-up"></i> 70
+                                                                    </a>
+                                                                    <a class="btn btn-like btn-like-dislike mt-1 mt-md-0"
+                                                                       href="#">
+                                                                        <i class="bi bi-hand-thumbs-down"></i> 7
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="box_questions mt-4">
+                                                <div class="row bs-qu">
+                                                    <div class="col-lg-2 bq1 text-center">
+                                                        <i class="bi bi-question-circle-fill"></i>
+                                                        <br>
+                                                        <span class="span1">پرسش</span>
+                                                        <br>
+                                                        <span class="span2">فرزاد عباسقلی زاده</span>
+                                                    </div>
+                                                    <div class="col-lg-10 bq2">
+                                                        <p>سلام چطوری دو گوشی همزمان پخش میکنه ؟ </p>
+
+                                                        <div class="row bq-footer">
+                                                            <div class="col-md-5 col-6 my-flex-align-end">
+                                                                <span class="date">
+                                                                    ۱۶ مهر ۱۳۹۷
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-md-7 col-6 text-end pe-0">
+                                                                <a class="d-none d-sm-block" href="#">
+                                                                    <span class="main-color-one-color">به این پرسش پاسخ دهید (۱ پاسخ)</span>
+                                                                </a><a class="d-sm-none d-block" href="#">پاسخ</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row bs-qu">
+                                                    <div class="col-lg-2 bq1 text-center">
+                                                        <i class="bi bi-chat-dots-fill"></i>
+                                                        <br>
+                                                        <span class="span1">پاسخ</span>
+                                                        <br>
+                                                        <span class="span2">حسین زارع</span>
+                                                    </div>
+                                                    <div class="col-lg-10 bq2 bg-transparent">
+                                                        <p>
+                                                            درباره راه اندازی: (خیلی دربارش پرسیده بودند): اول:
+                                                            بلوتوث گوشی خود
+                                                            را
+                                                            خاموش کنید.
+                                                            دوم: لطفا
+                                                            کلید های چند منظوره در هر دو هدفون را همزمان فشار دهید
+                                                        </p>
+                                                        <div class="row align-items-center bq-footer">
+                                                            <div class="col-lg-5 col-12 my-flex-align-end">
+                                                                <span class="date">
+                                                                    ۲۲ مهر ۱۳۹۷
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-lg-7 col-12 text-start p-0 ">
+                                                                <div class="comments_likes">
+                                                                    <span class="mr-4 mt-1">
+                                                                        ایا این نظر برایتان مفید بود ؟
+                                                                    </span>
+                                                                    <a class="btn btn-like btn-like-like mt-1 mt-md-0 ms-2"
+                                                                       href="#">
+                                                                        <i class="bi bi-hand-thumbs-up"></i> 70
+                                                                    </a>
+                                                                    <a class="btn btn-like btn-like-dislike mt-1 mt-md-0"
+                                                                       href="#">
+                                                                        <i class="bi bi-hand-thumbs-down"></i> 7
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="container mt-4">
+                                                <div class="text-center">
+                                                    <a class="btn main-color-one-bg border-0" href="">
+                                                        بارگذاری کامنت
+                                                        ها
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--============ end product description ==============-->
+<!--============ start product slider ==============-->
+@if (products != null && products.Any())
+{
+    <section class="product-slider  site-slider">
+        <div class="container-fluid">
+            <div class="section-title mb-3">
+                <div class="section-title-title">
+                    <h2 class="fw-900 h4">
+                        محصولات<span class="with-highlight ms-1">مشابه</span>
+                    </h2>
+                    <div class="Dottedsquare"></div>
+                </div>
+            </div>
+            <div class="swiper pro-slider">
+                <div class="swiper-wrapper">
+                    @foreach (var item in products)
+                    {
+                        <div class="swiper-slide">
+                            <div class="product-box border-ui">
+                                <a asp-area="" asp-controller="Product" asp-action="ProductDetail" asp-route-productId="@item.Id">
+                                    <div class="product-image">
+                                        <img src="@(PathExtension.ProductImageImage + item.MainImageName)" loading="lazy" alt=""
+                                             class="img-fluid one-image">
+                                    </div>
+                                    <div class="product-title mb-3">
+                                        <div class="title">
+                                            <p class="text-overflow-1 mt-2">@item.Title.LongString20()</p>
+                                        </div>
+                                    </div>
+                                    <div class="product-action">
+                                        <div class="price">
+                                            <p class="new-price">@item.BasePrice.ToRial()</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </section>
+}
+
+<!--============ share product modal ==============-->
+<section class="share-modal py-0">
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel">اشتراک گذاری</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="font-14 my-3">این کالا را با دوستان خود به اشتراک بگذارید!</h4>
+                    <button type="button" class="btn my-3 btnCopy d-block text-center main-color-one-bg w-100"
+                            id="liveToastBtn">
+                        <i class="bi bi-clipboard text-white me-1"></i>
+                        کپی کردن لینک
+                    </button>
+                    <div class=" mt-4N social-link justify-content-md-end justify-content-center">
+                        <a href="" class="bi bi-instagram"></a>
+                        <a href="" class="bi bi-twitter"></a>
+                        <a href="" class="bi bi-whatsapp"></a>
+                        <a href="" class="bi bi-youtube"></a>
+                        <a href="" class="bi bi-linkedin"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section SiteFooterSection
+{
+    <script src="/Site/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="/Site/plugin/tagify/jQuery.tagify.min.js"></script>
+    <script src="/Site/plugin/chartjs/chart.js"></script>
+    <script src="/Site/js/waitMe.min.js"></script>
+    <!-- initial counter product for product add to cart section -->
+    <script>
+        $(document).ready(function () {
+            $("input[name='count']").TouchSpin({
+                min: 1,
+                max: '5',
+                buttondown_class: "btn-counter waves-effect waves-light",
+                buttonup_class: "btn-counter waves-effect waves-light"
+            });
+        });
+    </script>
+
+    <script src="/Site/js/productdetail.js"></script>
+}
+
+@section SiteHeaderSection
+{
+    <link rel="stylesheet" href="/Site/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css">
+    <link href="/Site/plugin/tagify/tagify.css" rel="stylesheet">
+    <link href="/Site/css/waitMe.min.css" rel="stylesheet">
+}

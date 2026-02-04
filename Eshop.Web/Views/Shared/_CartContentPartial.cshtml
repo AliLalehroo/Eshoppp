@@ -1,0 +1,174 @@
+﻿@using Eshop.Application.Utils
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Eshop.Data.DTOs.OrderDto.OpenOrderDto?
+@Html.AntiForgeryToken()
+
+<section class="content" id="cart-page-content">
+    <div class="container-fluid">
+        @if (Model != null && Model.OrderDetails.Any())
+        {
+            <div class="container-fluid">
+                <div class="payment_navigtions">
+                    <div class="checkout-headers">
+                        <nav class="navbar navbar-expand">
+                            <ul class="navbar-nav">
+                                <li class="nav-item active">
+                                    <a href="" class="nav-link">
+                                        <span>1</span>
+                                        <p>سبد خرید</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="" class="nav-link">
+                                        <span>2</span>
+                                        <p>صورتحساب</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="" class="nav-link">
+                                        <span>3</span>
+                                        <p>جزییات پرداخت</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <h2 class="fw-900 main-color-one-color mt-4 h4">
+                        سبد خرید شما <span class="main-color-three-color">(@Model.OrderDetails.Sum(d => d.Count) محصول)</span>
+                    </h2>
+                </div>
+            </div>
+        }
+
+        @if (Model != null && Model.OrderDetails.Any())
+        {
+            <div class="cart-product">
+                <div class="row gy-4">
+                    <div class="col-lg-9">
+                        @foreach (var item in Model.OrderDetails.OrderByDescending(d => d.CreateDate))
+                        {
+                            <div class="cart-product-item">
+                                <div class="content-box">
+                                    <div class="container-fluid">
+                                        <div class="cart-items">
+                                            <div class="item">
+                                                <div class="row gy-2">
+                                                    <div class="col-md-2 w-100-in-400">
+                                                        <div class="image">
+                                                            <img src="@(PathExtension.ProductImageImage + item.ProductVariant.Product.MainImageName)" alt=""
+                                                                 class="img-fluid">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-10 w-100-in-400">
+                                                        <div class="d-flex justify-content-between align-items-md-start align-items-end flex-wrap">
+                                                            <div class="d-flex align-items-start flex-column me-2">
+                                                                <div class="title d-flex align-items-center flex-wrap">
+                                                                    <h6 class="font-16">
+                                                                        @item.ProductVariant.Product.Title
+                                                                    </h6>
+                                                                </div>
+                                                                <div class="cart-item-feature d-flex flex-column align-items-start flex-wrap mt-3">
+                                                                    <div class="item d-flex align-items-center">
+                                                                        <div class="icon"><i class="bi bi-palette"></i></div>
+                                                                        <div class="mx-2">رنگ:</div>
+                                                                        <div class="text-muted">@item.ProductVariant.ColorTitle</div>
+                                                                    </div>
+                                                                    <div class="item d-flex align-items-center">
+                                                                        <div class="icon"><i class="bi bi-123"></i></div>
+                                                                        <div class="mx-2">تعداد:</div>
+                                                                        <div class="text-muted">@item.Count</div>
+                                                                    </div>
+                                                                    <div class="item d-flex align-items-center mt-3">
+                                                                        <div class="counter">
+                                                                            <label>
+                                                                                <input type="text" name="count" class="counter count-input"
+                                                                                       data-id="@item.Id" value="@item.Count">
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="remove danger-label ms-3">
+                                                                            <a data-id="@item.Id" class="remove-order-detail pointer">
+                                                                                <i class="bi bi-trash-fill"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="action d-flex flex-wrap flex-column justify-content-sm-end justify-content-center align-items-center">
+                                                                <div class="product-box-price flex-column justify-content-end align-items-end">
+                                                                    <div class="product-box-price-price d-flex">
+                                                                        <h5 id="detailPrice" class="title-font main-color-green-color h2 mb-2">
+                                                                            @(((item.ProductVariant.Product.BasePrice + item.ProductVariant.Price) * item.Count).ToString("#,0"))
+                                                                        </h5>
+                                                                        <p class="mb-0 text-muted-two ms-1 ">تومان</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="cart-canvases position-sticky top-0">
+                            <div class="item">
+                                <div class="factor">
+                                    <div class="d-flex factor-item flex-column mb-3 align-items-start justify-content-between">
+                                        <h5 class="title-font mb-0 h6">حمل و نقل</h5>
+                                        <div class="form-check mt-3">
+                                            <input type="radio" checked class="form-check-input" name="post"
+                                                   id="post-1">
+                                            <label for="post-1" class="form-check-label">
+                                                پیک موتوری اختصاصی (کمتر از 5 ساعت): 80,000 تومان
+                                            </label>
+                                        </div>
+                                        <div class="form-check mt-3">
+                                            <input type="radio" class="form-check-input" name="post" id="post-2">
+                                            <label for="post-2" class="form-check-label">
+                                                پیک عمومی مهیار (2 تا 3 روز کاری): 50,000 تومان
+
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
+                                        <h5 class="title-font mb-0 h6">مجموع</h5>
+                                        <p id="totalPrice" class="mb-0 font-18">@Model.TotalCartPrice().ToRial()</p>
+                                    </div>
+
+                                    <div class="action mt-3 d-flex align-items-center justify-content-center">
+                                        <a asp-area="User" asp-controller="Order" asp-action="Checkout"
+                                           class="btn main-color-one-outline py-2 rounded-pill rounded-3 d-block w-100">
+                                            صورت
+                                            حساب
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="content-box">
+                        <div class="text-center">
+                            <img src="/Site/image/cart/empty.svg" class="cart-empty-image" alt="">
+                            <h5 class="text-center mt-5 h2 mt-3">سبد خرید شما خالی است</h5>
+                            <a href="/" class="btn mt-3 main-color-one-bg">رفتن به خانه</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        }
+
+    </div>
+</section>
+

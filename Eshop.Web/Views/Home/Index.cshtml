@@ -1,0 +1,810 @@
+﻿@using Eshop.Application.Utils
+@using Eshop.Data.DTOs.CommonDto
+@using Eshop.Data.Entities.Common
+@{
+    ViewData["Title"] = "فروشگاه Eshop";
+    var banners = (List<BannerItemDto>)ViewData["Banners"];
+    var newProducts = (List<ProductItemDto>)ViewData["NewProducts"];
+    var bestSellerProducts = (List<ProductItemDto>)ViewData["BestSellerProducts"];
+    var categories = (List<CategoryItemDto>)ViewData["Categories"];
+}
+<section class="main-slider">
+    <div class="container-fluid position-relative">
+        <div class="row gy-4">
+            <div class="col-xl-9">
+                @if (banners != null && banners.Any(b => b.BannerLocation == BannerLocation.Slider))
+                {
+                    <div class="slider">
+                        <div class="swiper" id="homeSlider">
+                            <div class="swiper-wrapper">
+                                @foreach (var banner in banners.Where(b => b.BannerLocation == BannerLocation.Slider).OrderBy(b => b.Order))
+                                {
+                                    <div class="swiper-slide">
+                                        <a href="@banner.Url">
+                                            <img src="@(PathExtension.BannerImage + banner.ImageName)" class="img-fluid w-100" alt="">
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                            <div class="swiper-pagination"></div>
+                            <div class="swiper-button-next d-lg-flex d-none"></div>
+                            <div class="swiper-button-prev d-lg-flex d-none"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-xl-3">
+                <div class="swiper suggetMoment">
+                    <div class="swiper-wrapper position-relative">
+                        <div class="swiper-slide p-1">
+                            <a href="">
+                                <div class="product-box border-ui">
+                                    <div class="product-timer">
+                                        <div class="timer-label">
+                                            <span>40% تخفیف</span>
+                                        </div>
+                                        <div class="timer">
+                                            <div class='countdown' data-date="2027-01-01" data-time="18:30">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-image">
+                                        <img alt="" class="img-fluid"
+                                             src="/Site/image/product/laptop-1.jpg">
+                                    </div>
+                                    <div class="product-title">
+                                        <div class="title">
+                                            <p class="title-font font-14">
+                                                گوشی موبایل شیائومی مدل Redmi Note 13 Pro 5G
+                                                دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="product-action flex-column mt-3">
+                                        <div class="price d-flex justify-content-between w-100 align-items-baseline">
+                                            <p class="new-price">3,175,000 <span class="font-12">تومان</span></p>
+                                            <p class="old-price">6,500,000 </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide p-1">
+                            <a href="">
+                                <div class="product-box border-ui">
+                                    <div class="product-timer">
+                                        <div class="timer-label">
+                                            <span>40% تخفیف</span>
+                                        </div>
+                                        <div class="timer">
+                                            <div class='countdown' data-date="2027-01-01" data-time="18:30">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-image">
+                                        <img alt="" class="img-fluid"
+                                             src="/Site/image/product/laptop-2.jpg">
+                                    </div>
+                                    <div class="product-title">
+                                        <div class="title">
+                                            <p class="title-font font-14">
+                                                گوشی موبایل شیائومی مدل Redmi Note 13 Pro 5G
+                                                دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="product-action flex-column mt-3">
+                                        <div class="price d-flex justify-content-between w-100 align-items-baseline">
+                                            <p class="new-price">3,175,000 <span class="font-12">تومان</span></p>
+                                            <p class="old-price">6,500,000 </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide p-1">
+                            <a href="">
+                                <div class="product-box border-ui">
+                                    <div class="product-timer">
+                                        <div class="timer-label">
+                                            <span>40% تخفیف</span>
+                                        </div>
+                                        <div class="timer">
+                                            <div class='countdown' data-date="2027-01-01" data-time="18:30">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-image">
+                                        <img alt="" class="img-fluid"
+                                             src="/Site/image/product/laptop-3.jpg">
+                                    </div>
+                                    <div class="product-title">
+                                        <div class="title">
+                                            <p class="title-font font-14">
+                                                گوشی موبایل شیائومی مدل Redmi Note 13 Pro 5G
+                                                دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="product-action flex-column mt-3">
+                                        <div class="price d-flex justify-content-between w-100 align-items-baseline">
+                                            <p class="new-price">3,175,000 <span class="font-12">تومان</span></p>
+                                            <p class="old-price">6,500,000 </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="swiper-progress-bar">
+                            <span class="slide_progress-bar"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--============ end main slider ==============-->
+
+<!--============ start feature section ==============-->
+<section class="feature">
+    <div class="container-fluid">
+        <div class="row justify-content-center g-2 row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-5">
+            <div class="col">
+                <div class="feature-item text-center active">
+                    <div class="icon">
+                        <i class="bi bi-coin"></i>
+                    </div>
+                    <div class="title mt-2 d-flex align-items-center justify-content-center flex-column">
+                        <h6 class="h6">فقط کالاهای اصل</h6>
+                        <h6 class="fw-lighter font-14 mt-3">همراه با گارانتی معتبر</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="feature-item text-center">
+                    <div class="icon">
+                        <i class="bi bi-repeat"></i>
+                    </div>
+                    <div class="title mt-2 d-flex align-items-center justify-content-center flex-column">
+                        <h6 class="h6">بازگشت و تعویض کالا</h6>
+                        <h6 class="fw-lighter font-14 mt-3">تا هفت روز به هر دلیل</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="feature-item text-center">
+                    <div class="icon">
+                        <i class="bi bi-gift"></i>
+                    </div>
+                    <div class="title mt-2 d-flex align-items-center justify-content-center flex-column">
+                        <h6 class="h6">دریافت امتیاز با سفارش</h6>
+                        <h6 class="fw-lighter font-14 mt-3">برای خرید های بعدی</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="feature-item text-center">
+                    <div class="icon">
+                        <i class="bi bi-car-front"></i>
+                    </div>
+                    <div class="title mt-2 d-flex align-items-center justify-content-center flex-column">
+                        <h6 class="h6">ارسال اکسپرس</h6>
+                        <h6 class="fw-lighter font-14 mt-3">سوپر مارت در تهران</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="feature-item text-center">
+                    <div class="icon">
+                        <i class="bi bi-headset"></i>
+                    </div>
+                    <div class="title mt-2 d-flex align-items-center justify-content-center flex-column">
+                        <h6 class="h6">مشاور رایگان خرید</h6>
+                        <h6 class="fw-lighter font-14 mt-3">برای تمامی خرید های شما</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--============ end feature section ==============-->
+
+<!--============ start category slider  ==============-->
+@if (categories != null && categories.Any())
+{
+    <section class="categories free-swiper py-30">
+        <div class="container-fluid position-relative">
+            <div class="section-title mb-5">
+                <div class="row gy-3 align-items-center">
+                    <div class="col-sm-8">
+                        <div class="section-title-title">
+                            <h2 class="fw-900 h4">
+                                دسته بندی <span class="with-highlight ms-1">محصولات</span>
+                            </h2>
+                            <div class="Dottedsquare"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="section-title-link text-sm-end text-start">
+                            <a class="btn main-color-two-bg border-0" href=""> مشاهده همه</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row gy-4">
+                @foreach (var category in categories.OrderBy(c => c.Order))
+                {
+                    <div class="col-lg-3 col-sm-6">
+                        <a asp-area="" asp-controller="Product" asp-action="FilterProducts" asp-route-url="@category.Url">
+                            <div class="cat-item d-flex align-items-center">
+                                <div class="cat-item-image">
+                                    <img src="@(PathExtension.CategoryThumb + category.MainImage)" alt="">
+                                </div>
+                                <div class="cat-item-desc ms-3">
+                                    <h5>@category.Title</h5>
+                                    <p class="text-muted">@category.Url</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+<!--============ end category slider  ==============-->
+
+<!--============ start amazing slider ==============-->
+@if (bestSellerProducts != null && bestSellerProducts.Any())
+{
+    <section class="offers">
+        <div class="container-fluid">
+            <div class="offer">
+                <div class="row">
+                    <div class="col-lg-8 col-xxl-9">
+                        <div class="swiper" id="offerItem">
+                            <div class="swiper-wrapper">
+                                @foreach (var item in bestSellerProducts)
+                                {
+                                    <div class="swiper-slide">
+                                        <div class="offer-item">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="offer-img">
+                                                        <img src="@(PathExtension.ProductImageImage + item.Image)" alt="" class="img-fluid">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="offer-content">
+                                                        <div class="offer-title d-md-inline-block d-none">
+                                                            <h4>پرفروش ترین محصولات <span>Eshop</span></h4>
+                                                        </div>
+                                                        <div class="offer-desc">
+                                                            <div class="se-title">
+                                                                <h5 class="text-overflow-2">
+                                                                    @item.Title
+                                                                </h5>
+                                                            </div>
+                                                            <div class="se-desc">
+                                                                <h6>ویژگی محصول:</h6>
+                                                                <ul>
+                                                                    <li>
+                                                                        <span class="title">سری پردازنده:</span>
+                                                                        <span class="desc">Core i7</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span class="title">مقدار رم:</span>
+                                                                        <span class="desc">16 گیگابایت</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span class="title">حافظه داخلی:</span>
+                                                                        <span class="desc">512 گیگابایت</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="offer-desc-price">
+                                                                <span class="new">@item.Price.ToRial()</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="offer-btn">
+                                                            <a class="btn border-0 rounded-pill main-color-one-bg"
+                                                               asp-area="" asp-controller="Product" asp-action="ProductDetail" asp-route-productId="@item.ProductId">
+                                                                <i class="bi bi-cart-plus"></i> بریم
+                                                                واسه
+                                                                خرید!
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-xxl-3 d-lg-block d-none">
+                        <div class="offer-item-link">
+                            <div class="swiper" id="offerItemLink">
+                                <div class="swiper-wrapper">
+                                    @foreach (var item in bestSellerProducts)
+                                    {
+                                        <div class="swiper-slide">
+                                            <div class="offer-item-link-item shadow-sm">
+                                                <h6>
+                                                    @item.Title
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+<!--============ end amazing slider ==============-->
+
+<!--============ start banner section ==============-->
+@if (banners != null & banners.Any(b => b.BannerLocation == BannerLocation.FirstRow))
+{
+    <section class="banner">
+        <div class="container-fluid">
+            <div class="row">
+                @foreach (var item in banners.Where(b => b.BannerLocation == BannerLocation.FirstRow))
+                {
+                    <div class="col-md-6">
+                        <div class="banner-item rounded-3">
+                            <a href="@item.Url">
+                                <img src="@(PathExtension.BannerImage + item.ImageName)" alt="" class="img-fluid rounded-3 w-100">
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+<!--============ end banner section ==============-->
+
+<!--============ start product slider ==============-->
+@if (newProducts != null && newProducts.Any())
+{
+    <section class="product-slider  site-slider">
+        <div class="container-fluid">
+            <div class="section-title mb-3">
+                <div class="row gy-3 align-items-center">
+                    <div class="col-sm-8">
+                        <div class="section-title-title">
+                            <h2 class="fw-900 h4">
+                                محصولات<span class="with-highlight ms-1">تازه وارد</span>
+                            </h2>
+                            <div class="Dottedsquare"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="section-title-link text-sm-end text-start">
+                            <a asp-area="" asp-controller="Product" asp-action="FilterProducts"
+                               class="btn main-color-two-bg border-0"> مشاهده همه</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper pro-slider">
+                <div class="swiper-wrapper">
+                    @foreach (var item in newProducts)
+                    {
+                        <div class="swiper-slide">
+                            <div class="product-box border-ui">
+                                <a asp-area="" asp-controller="Product" asp-action="ProductDetail" asp-route-productId="@item.ProductId">
+                                    <div class="product-image">
+                                        <img src="@(PathExtension.ProductImageThumb + item.Image)" loading="lazy" alt=""
+                                             class="img-fluid one-image">
+                                    </div>
+                                    <div class="product-title">
+                                        <div class="title">
+                                            <p class="text-overflow-1 mt-2">@item.Title.LongString30()</p>
+                                        </div>
+                                    </div>
+                                    <div class="product-action">
+                                        <div class="price">
+                                            <p class="new-price">@item.Price.ToRial()</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </section>
+}
+<!--============ end product slider ==============-->
+
+<!--============ start banner section ==============-->
+@if (banners != null && banners.Any(b => b.BannerLocation == BannerLocation.SecondRow))
+{
+    <section class="banner">
+        <div class="container-fluid">
+            <div class="row">
+                @foreach (var item in banners.Where(b => b.BannerLocation == BannerLocation.SecondRow))
+                {
+                    <div class="col-md-6">
+                        <div class="banner-item rounded-3">
+                            <a href="@item.Url">
+                                <img src="@(PathExtension.BannerImage + item.ImageName)" alt="" class="img-fluid rounded-3 w-100">
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+<!--============ end banner section ==============-->
+
+<!--============ start product group ==============-->
+<section class="product-group">
+    <div class="container-fluid">
+        <div class="border bg-white slider-parent border-ui px-3 rounded-3">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="product-group-item">
+                        <h5 class="fw-bold with-highlight ms-1">گوشی موبایل</h5>
+                        <p class="text-muted">بر اساس سلیقه شما</p>
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/product-image1.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/product-image2.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/product-image3.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/product-image4.jpg" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="text-center py-3">
+                            <a href="" class="main-color-one-color">
+                                مشاهده
+                                <i class="bi bi-chevron-left font-14"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="product-group-item">
+                        <h5 class="fw-bold with-highlight ms-1">ساعت هوشمند</h5>
+                        <p class="text-muted">بر اساس سلیقه شما</p>
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/wach1.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/wach2.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/wach3.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/wach4.jpg" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="text-center py-3">
+                            <a href="" class="main-color-one-color">
+                                مشاهده
+                                <i class="bi bi-chevron-left font-14"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="product-group-item">
+                        <h5 class="fw-bold with-highlight ms-1">تلویزیون</h5>
+                        <p class="text-muted">بر اساس سلیقه شما</p>
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/television1.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/television2.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/television3.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/television4.jpg" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="text-center py-3">
+                            <a href="" class="main-color-one-color">
+                                مشاهده
+                                <i class="bi bi-chevron-left font-14"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="product-group-item">
+                        <h5 class="fw-bold with-highlight ms-1">انواع لپتاپ</h5>
+                        <p class="text-muted">بر اساس سلیقه شما</p>
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/laptop1.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/laptop3.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/laptop3.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="">
+                                    <img src="/Site/image/product/laptop4.jpg" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="text-center py-3">
+                            <a href="" class="main-color-one-color">
+                                مشاهده
+                                <i class="bi bi-chevron-left font-14"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--============ end product group ==============-->
+
+<!--============ start quick select   ==============-->
+<section class="quick-select pt-0 free-swiper">
+    <div class="container-fluid position-relative">
+        <div class="section-title mb-3">
+            <div class="row gy-3 align-items-center">
+                <div class="col-sm-8">
+                    <div class="section-title-title">
+                        <h2 class="fw-900 h4">
+                            گوشی براساس<span class="with-highlight ms-1">ویژگی</span>
+                        </h2>
+                        <div class="Dottedsquare"></div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="section-title-link text-sm-end text-start">
+                        <a class="btn main-color-two-bg border-0" href=""> مشاهده همه</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center g-2 row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-5">
+            <div class="col">
+                <div class="bg-white mini-box rounded-3 px-1 py-3 shadow-box">
+                    <a href="" class="d-flex align-items-center justify-content-center flex-column">
+                        <i class="bi bi-cpu main-color-one-color fs-3"></i>
+                        <h5 class="mt-3">قدرت پردازش</h5>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="bg-white mini-box rounded-3 px-1 py-3 shadow-box">
+                    <a href="" class="d-flex align-items-center justify-content-center flex-column">
+                        <i class="bi bi-battery main-color-one-color fs-3"></i>
+                        <h5 class="mt-3">نگه داری باتری</h5>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="bg-white mini-box rounded-3 px-1 py-3 shadow-box">
+                    <a href="" class="d-flex align-items-center justify-content-center flex-column">
+                        <i class="bi bi-camera main-color-one-color fs-3"></i>
+                        <h5 class="mt-3">دوربین</h5>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="bg-white mini-box rounded-3 px-1 py-3 shadow-box">
+                    <a href="" class="d-flex align-items-center justify-content-center flex-column">
+                        <i class="bi bi-hdd main-color-one-color fs-3"></i>
+                        <h5 class="mt-3">حافظه</h5>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="bg-white mini-box rounded-3 px-1 py-3 shadow-box">
+                    <a href="" class="d-flex align-items-center justify-content-center flex-column">
+                        <i class="bi bi-globe main-color-one-color fs-3"></i>
+                        <h5 class="mt-3">اینترنت نسل 5</h5>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--============ end quick select   ==============-->
+
+<!--============ start blog-slider   ==============-->
+<section class="blog-slider free-swiper">
+    <div class="container-fluid position-relative">
+        <div class="section-title mb-3">
+            <div class="row gy-3 align-items-center">
+                <div class="col-sm-8">
+                    <div class="section-title-title">
+                        <h2 class="fw-900 h4">
+                            مطالب<span class="with-highlight ms-1">وبلاگ</span>
+                        </h2>
+                        <div class="Dottedsquare"></div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="section-title-link text-sm-end text-start">
+                        <a class="btn main-color-two-bg border-0" href=""> مشاهده همه</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="swiper blog-slider-sw">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="blog-item border-ui">
+                        <a href="">
+                            <div class="image">
+                                <img src="/Site/image/blog/blog-2.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="title-item d-flex align-items-center main-color-one-bg px-3  py-2">
+                                        <span class="font-14 text-white"> #آموزشی</span>
+                                    </div>
+                                    <div class="title-item d-flex align-items-center main-color-one-bg p-3  py-2 ms-5">
+                                        <span class="font-14 text-white">1 خرداد 1402</span>
+                                    </div>
+                                </div>
+                                <h4 class="font-16 text-overflow-1 h4 pb-3">
+                                    ارز دیجیتال چیست و چگونه استخراج میشود؟
+                                </h4>
+                            </div>
+
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="blog-item border-ui">
+                        <a href="">
+                            <div class="image">
+                                <img src="/Site/image/blog/blog-1.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="title-item d-flex align-items-center main-color-one-bg px-3  py-2">
+                                        <span class="font-14 text-white"> #آموزشی</span>
+                                    </div>
+                                    <div class="title-item d-flex align-items-center main-color-one-bg p-3  py-2 ms-5">
+                                        <span class="font-14 text-white">1 خرداد 1402</span>
+                                    </div>
+                                </div>
+                                <h4 class="font-16 text-overflow-1 h4 pb-3">
+                                    ارز دیجیتال چیست و چگونه استخراج میشود؟
+                                </h4>
+                            </div>
+
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="blog-item border-ui">
+                        <a href="">
+                            <div class="image">
+                                <img src="/Site/image/blog/blog-3.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="title-item d-flex align-items-center main-color-one-bg px-3  py-2">
+                                        <span class="font-14 text-white"> #آموزشی</span>
+                                    </div>
+                                    <div class="title-item d-flex align-items-center main-color-one-bg p-3  py-2 ms-5">
+                                        <span class="font-14 text-white">1 خرداد 1402</span>
+                                    </div>
+                                </div>
+                                <h4 class="font-16 text-overflow-1 h4 pb-3">
+                                    ارز دیجیتال چیست و چگونه استخراج میشود؟
+                                </h4>
+                            </div>
+
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="blog-item border-ui">
+                        <a href="">
+                            <div class="image">
+                                <img src="/Site/image/blog/blog-4.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="title-item d-flex align-items-center main-color-one-bg px-3  py-2">
+                                        <span class="font-14 text-white"> #آموزشی</span>
+                                    </div>
+                                    <div class="title-item d-flex align-items-center main-color-one-bg p-3  py-2 ms-5">
+                                        <span class="font-14 text-white">1 خرداد 1402</span>
+                                    </div>
+                                </div>
+                                <h4 class="font-16 text-overflow-1 h4 pb-3">
+                                    ارز دیجیتال چیست و چگونه استخراج میشود؟
+                                </h4>
+                            </div>
+
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="blog-item border-ui">
+                        <a href="">
+                            <div class="image">
+                                <img src="/Site/image/blog/blog-5.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="title-item d-flex align-items-center main-color-one-bg px-3  py-2">
+                                        <span class="font-14 text-white"> #آموزشی</span>
+                                    </div>
+                                    <div class="title-item d-flex align-items-center main-color-one-bg p-3  py-2 ms-5">
+                                        <span class="font-14 text-white">1 خرداد 1402</span>
+                                    </div>
+                                </div>
+                                <h4 class="font-16 text-overflow-1 h4 pb-3">
+                                    ارز دیجیتال چیست و چگونه استخراج میشود؟
+                                </h4>
+                            </div>
+
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,24 @@
+﻿@using Eshop.Web.UserExtensions
+@model Eshop.Data.DTOs.OrderDto.SubmitOrderDetailDto
+<form asp-area="User" asp-controller="Order" asp-action="AddProductToCart" class="w-100 d-flex flex-column justify-content-center align-items-center mt-3">
+    <input type="hidden" id="ProductVariantId" asp-for="ProductVariantId" />
+    <input type="hidden" asp-for="UserId" value="@User.GetUserId()"/>
+    <input type="hidden" asp-for="ProductId"/>
+    <div class="counter">
+        <label>
+            <input id="productQuantity" asp-for="Count" type="text" name="count" class="counter" value="1" min="1" max="5">
+        </label>
+    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <button type="submit" id="addToCartBtn" class="btn justify-content-center main-color-green w-100 text-center btn-add-to-cart text-white  mt-3">
+            <i class="bi bi-basket me-3 lh-sm fs-4"></i> افزودن به سبد خرید
+        </button>
+    }
+    else
+    {
+        <a asp-area="" asp-controller="Account" asp-action="RegisterOrLogin" id="addToCartBtn" class="btn justify-content-center main-color-green w-100 text-center btn-add-to-cart text-white  mt-3">
+            <i class="bi bi-basket me-3 lh-sm fs-4"></i> افزودن به سبد خرید
+        </a>
+    }
+</form>

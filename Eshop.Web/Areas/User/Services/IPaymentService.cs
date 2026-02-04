@@ -1,0 +1,10 @@
+﻿using Eshop.Data.DTOs.PaymentDto;
+
+namespace Eshop.Web.Areas.User.Services
+{
+    public interface IPaymentService
+    {
+        Task<PaymentRequestResult?> CreatePayment(PaymentRequest paymentRequest);
+        Task<PaymentVerificationResult?> VerifyPayment(PaymentVerification verification);
+    }
+}

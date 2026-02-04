@@ -1,0 +1,228 @@
+﻿@using Eshop.Data.DTOs.ProductDto
+@using Eshop.Data.Entities.ProductEntities
+@{
+    var categories = (List<ProductCategory>)ViewData["Categories"];
+}
+<header class="header">
+    <div class="container-fluid">
+        <div class="top-header">
+            <div class="row gy-3 align-items-center">
+                <div class="col-lg-2 col-xl-2 col-6 order-lg-1 order-1">
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center me-2">
+                            <div class="responsive-menu d-lg-none d-block">
+                                <button aria-controls="responsive menu" class="btn border-0 p-0 btn-responsive-menu"
+                                        data-bs-target="#responsiveMenu" data-bs-toggle="offcanvas" type="button">
+                                    <i class="bi bi-list font-30"></i>
+                                </button>
+                                <div aria-labelledby="responsive menu" class="offcanvas offcanvas-start"
+                                     id="responsiveMenu" tabindex="-1">
+                                    <div class="offcanvas-header">
+                                        <h5 class="offcanvas-title" id="offcanvasRightLabel">فروشگاه Eshop</h5>
+                                        <button aria-label="Close" class="btn-close" data-bs-dismiss="offcanvas"
+                                                type="button"></button>
+                                    </div>
+                                    <div class="offcanvas-body">
+                                        <a class="text-center top-header-logo d-block mb-3" href="/">
+                                            <img alt="" class="img-fluid" src="/Site/image/logo.png">
+                                        </a>
+                                        <div class="header-bottom-form mb-4 w-100">
+                                            <div class="search-form">
+                                               <partial name="_SearchProductPartial" model="new FilterProductDto()"/>
+                                            </div>
+                                        </div>
+                                        <ul class="rm-item-menu navbar-nav">
+                                            @if (categories != null && categories.Any())
+                                            {
+                                                @foreach (var parent in categories.Where(p => p.ParentId == null && p.SubCategories.Any()))
+                                                {
+                                                    <li class="nav-item bg-ul-f7">
+                                                        <a class="nav-link" href="">@parent.Title</a>
+                                                        <span class="showSubMenu"><i class="bi bi-chevron-left"></i></span>
+                                                        <ul class="navbar-nav h-0">
+                                                            @if (categories.Any(c => c.ParentId == parent.Id))
+                                                            {
+                                                                @foreach (var category in categories.Where(c => c.ParentId == parent.Id))
+                                                                {
+                                                                    <li class="nav-item">
+                                                                        <a class="nav-link" asp-area="" asp-controller="Product" asp-action="FilterProducts" 
+                                                                           asp-route-url="@category.Url">@category.Title</a>
+                                                                        @if (categories.Any(s => s.ParentId == category.Id))
+                                                                        {
+                                                                            <span class="showSubMenu">
+                                                                                <i class="bi bi-chevron-left"></i>
+                                                                            </span>
+                                                                            <ul class="navbar-nav h-0 bg-ul-f7">
+                                                                                @foreach (var subCategory in categories.Where(s => s.ParentId == category.Id))
+                                                                                {
+                                                                                    <li class="nav-item">
+                                                                                        <a class="nav-link" asp-area="" asp-controller="Product" asp-action="FilterProducts" 
+                                                                                           asp-route-url="@subCategory.Url">@subCategory.Title</a>
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+                                                                        }
+                                                                    </li>
+                                                                }
+                                                            }
+                                                        </ul>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="top-header-logo">
+                            <a href="/">
+                                <img alt="" src="/Site/image/logo.png">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-5 order-lg-3 order-3 d-lg-block d-none">
+                    <div class="search-form">
+                        <partial name="_SearchProductPartial" model="new FilterProductDto()"/>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-5 col-6 order-lg-4 order-2">
+                    <div class="top-header-link justify-content-end flex-wrap">
+                        <div class="d-flex align-items-center top-header-call d-xl-flex d-none">
+                            <div class="top-header-call-icon">
+                                <i class="bi bi-telephone-forward text-white fs-5"></i>
+                            </div>
+                            <div class="top-header-call-title ms-3">
+                                <p class="text-muted">پشتیبانی 24 ساعته</p>
+                                <h6 class="text-center h5 pt-2">021-12345678</h6>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center d-xl-none justify-content-end">
+                            <div class="d-flex align-items-center justify-content-between top-header-call">
+                                <div class="auth-link">
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <a asp-area="" asp-controller="" asp-action="" class="auth-btn">
+                                            <i class="bi bi-person"></i>
+                                            <span class="fw-bold d-sm-inline-block d-none">حساب کاربری</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-area="" asp-controller="Account" asp-action="RegisterOrLogin" class="auth-btn">
+                                            <i class="bi bi-person"></i>
+                                            <span class="fw-bold d-sm-inline-block d-none">ورود / عضویت</span>
+                                        </a>
+                                    }
+                                </div>
+                                <div class="cart-button ms-3">
+                                    <a class="d-flex align-items-center h-100" data-bs-toggle="offcanvas"
+                                       href="#offcanvasCart" role="button" aria-controls="offcanvasCart">
+                                        <i class="bi bi-cart w-40-px h-40-px lh-40-px main-color-one-bg no-hover d-inline-block rounded-start cart-btn text-center"></i>
+                                        <span class="d-sm-block d-none main-color-two-bg h-40-px lh-40-px px-2 no-hover rounded-end">20 میلیون تومان</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="mega-menu menu mega-menu-top pt-1 d-lg-block d-none">
+    <div class="container-fluid">
+        <div class="top-menu-parent">
+            <div class="row align-items-center">
+                <div class="col-lg-9 col-xl-8">
+                    <div class="top-menu-menu">
+                        <ul class="navbar-nav align-items-center">
+                            <li class="position-relative m-0"></li>
+                            <li class="nav-item main-menu-head">
+                                <a class="nav-link border-animate fromCenter btn nav-active fw-bold" href="">
+                                    <i class="bi bi-grid"></i>
+                                    دسته بندی محصولات
+                                </a>
+                                <ul class="main-menu mega-container">
+                                    @if (categories != null && categories.Any())
+                                    {
+                                        @foreach (var parent in categories.Where(p => p.ParentId == null))
+                                        {
+                                            <li class="">
+                                                <a href="#">
+                                                    <i class="bi bi-phone"></i>
+                                                   @parent.Title
+                                                </a>
+                                                @if (categories.Any(s => s.ParentId == parent.Id))
+                                                {
+                                                    <ul class="main-menu-sub back-menu"
+                                                        style="background: #fff url('/Site/image/mobiles.png') no-repeat;">
+                                                        @foreach (var category in categories.Where(c => c.ParentId == parent.Id))
+                                                        {
+                                                            <li><a asp-area="" asp-controller="Product" asp-action="FilterProducts" 
+                                                                  asp-route-url="@category.Url" class="title my-flex-baseline">@category.Title</a></li>
+                                                            @if (categories.Any(s => s.ParentId == category.Id))
+                                                            {
+                                                                @foreach (var subCategory in categories.Where(s => s.ParentId == category.Id))
+                                                                {
+                                                                    <li><a asp-area="" asp-controller="Product" asp-action="FilterProducts" 
+                                                                           asp-route-url="@subCategory.Url">@subCategory.Title</a></li>
+                                                                }
+                                                            }
+                                                        }
+                                                    </ul>
+                                                }
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link border-animate fromCenter" href="">
+                                    <i class="bi bi-tag"></i>تخفیف ها و پیشنهاد ها
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link border-animate fromCenter" href="">
+                                    <i class="bi bi-question-octagon"></i>
+                                    سوالی
+                                    دارید
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-xl-4">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="d-flex align-items-center justify-content-between top-header-call d-xl-flex d-none">
+                            <div class="auth-link">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-area="User" asp-controller="Home" asp-action="Dashboard" class="auth-btn">
+                                        <i class="bi bi-person"></i>
+                                        <span class="fw-bold d-sm-inline-block d-none">حساب کاربری</span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-area="" asp-controller="Account" asp-action="RegisterOrLogin" class="auth-btn">
+                                        <i class="bi bi-person"></i>
+                                        <span class="fw-bold d-sm-inline-block d-none">ورود / عضویت</span>
+                                    </a>
+                                }
+                            </div>
+                            <div class="cart-button ms-3">
+                                <a asp-area="User" asp-controller="Order" asp-action="Cart" class="d-flex align-items-center h-100">
+                                    <i class="bi bi-cart w-40-px h-40-px lh-40-px main-color-one-bg no-hover d-inline-block rounded-start text-center"></i>
+                                    <span class="d-block main-color-two-bg h-40-px lh-40-px px-2 no-hover rounded-end">سبد خرید</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
