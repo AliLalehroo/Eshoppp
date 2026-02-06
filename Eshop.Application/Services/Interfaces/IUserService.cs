@@ -6,16 +6,15 @@ namespace Eshop.Application.Services.Interfaces
     public interface IUserService : IAsyncDisposable
     {
         #region Register & Login
-        Task RegisterOrLoginUser(RegisterUserDTO dto);
+        Task RegisterUser(RegisterUserDTO dto);
+        Task<User?> AuthenticateUser(LoginUserDto dto);
         Task<UserDashboardDetailDto> UserDashboardDetail(long userId);
-        Task<bool> CheckUserExistByMobile(string mobile);
+        Task<bool> CheckUserExistByEmail(string email);
         Task<User> GetUserById(long userId);
-        Task<bool> CheckMobileAuthorization(MobileActivationDTO dto);
-        Task<User?> GetUserByMobile(string mobile);
+        Task<User?> GetUserByEmail(string email);
         Task<EditUserInfoDTO> GetEditUserDetail(long userId);
         Task EditUserDetail(EditUserInfoDTO dto);
         Task<UserDetailDTO> GetUserDetail(long userId);
-        Task<bool> SendActivationSms(string mobile);
         #endregion
 
         #region User Management

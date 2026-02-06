@@ -1,4 +1,5 @@
 ﻿using Eshop.Application.Services.Interfaces;
+using Eshop.Application.Security;
 using Eshop.Data.DTOs.Account;
 using Eshop.Data.DTOs.Paging;
 using Eshop.Data.Entities.Account;
@@ -16,14 +17,12 @@ namespace Eshop.Application.Services.Implementations
         private readonly IGenericRepository<User> _userRepository;
         private readonly IGenericRepository<Order> _orderRepository;
         private readonly IGenericRepository<FavoriteProduct> _favoriteRepository;
-        private readonly ISmsService _smsService;
 
-        public UserService(IGenericRepository<User> userRepository, IGenericRepository<Order> orderRepository, IGenericRepository<FavoriteProduct> favoriteRepository, ISmsService smsService)
+        public UserService(IGenericRepository<User> userRepository, IGenericRepository<Order> orderRepository, IGenericRepository<FavoriteProduct> favoriteRepository)
         {
             _userRepository = userRepository;
             _orderRepository = orderRepository;
             _favoriteRepository = favoriteRepository;
-            _smsService = smsService;
         }
         public async ValueTask DisposeAsync()
         {
@@ -34,29 +33,34 @@ namespace Eshop.Application.Services.Implementations
         #endregion
 
         #region Register Methods
-        public async Task RegisterOrLoginUser(RegisterUserDTO dto)
+        public async Task RegisterUser(RegisterUserDTO dto)
         {
-            var checkUser = await CheckUserExistByMobile(dto.MobileNumber);
-
+            var checkUser = await CheckUserExistByEmail(dto.Email);
             if (checkUser)
             {
-                var user = await _userRepository.GetQuery().FirstAsync(u => u.MobileNumber == dto.MobileNumber);
-                user.MobileActivationNumer = new Random().Next(10000, 99999).ToString();
-                _userRepository.EditEntity(user);
-                await _userRepository.SaveAsync();
-                await _smsService.SendVerificationSms(dto.MobileNumber, user.MobileActivationNumer);
+                throw new DuplicateNameException("A user with this email already exists.");
             }
-            else
+
+            var (passwordHash, passwordSalt) = PasswordHasher.Hash(dto.Password);
+
+            var newUser = new User
             {
-                var newUser = new User
-                {
-                    MobileNumber = dto.MobileNumber,
-                    MobileActivationNumer = new Random().Next(10000, 99999).ToString()
-                };
-                await _userRepository.AddEntity(newUser);
-                await _userRepository.SaveAsync();
-                await _smsService.SendVerificationSms(dto.MobileNumber, newUser.MobileActivationNumer);
-            }
+                Email = dto.Email.Trim().ToLowerInvariant(),
+                PasswordSalt = passwordSalt,
+                PasswordHash = passwordHash
+            };
+
+            await _userRepository.AddEntity(newUser);
+            await _userRepository.SaveAsync();
+        }
+
+        public async Task<User?> AuthenticateUser(LoginUserDto dto)
+        {
+            var user = await GetUserByEmail(dto.Email);
+            if (user == null) return null;
+
+            var isValid = PasswordHasher.Verify(dto.Password, user.PasswordHash, user.PasswordSalt);
+            return isValid ? user : null;
         }
 
         public async Task<UserDashboardDetailDto> UserDashboardDetail(long userId)
@@ -74,9 +78,10 @@ namespace Eshop.Application.Services.Implementations
             };
         }
 
-        public async Task<bool> CheckUserExistByMobile(string mobile)
+        public async Task<bool> CheckUserExistByEmail(string email)
         {
-            return await _userRepository.GetQuery().AnyAsync(u => u.MobileNumber == mobile);
+            var normalizedEmail = email.Trim().ToLowerInvariant();
+            return await _userRepository.GetQuery().AnyAsync(u => u.Email == normalizedEmail);
         }
 
         public async Task<User> GetUserById(long userId)
@@ -84,18 +89,10 @@ namespace Eshop.Application.Services.Implementations
             return await _userRepository.GetEntityById(userId);
         }
 
-        public async Task<bool> CheckMobileAuthorization(MobileActivationDTO dto)
+        public async Task<User?> GetUserByEmail(string email)
         {
-            var user = await GetUserByMobile(dto.Mobile);
-            if (user == null) return false;
-
-            var activationCode = $"{dto.ActivationCodePart1}{dto.ActivationCodePart2}{dto.ActivationCodePart3}{dto.ActivationCodePart4}{dto.ActivationCodePart5}";
-            return activationCode == user.MobileActivationNumer;
-        }
-
-        public async Task<User?> GetUserByMobile(string mobile)
-        {
-            return await _userRepository.GetQuery().FirstOrDefaultAsync(u => u.MobileNumber == mobile);
+            var normalizedEmail = email.Trim().ToLowerInvariant();
+            return await _userRepository.GetQuery().FirstOrDefaultAsync(u => u.Email == normalizedEmail);
         }
 
         public async Task<EditUserInfoDTO> GetEditUserDetail(long userId)
@@ -143,15 +140,6 @@ namespace Eshop.Application.Services.Implementations
             };
         }
 
-        public async Task<bool> SendActivationSms(string mobile)
-        {
-            var user = await _userRepository.GetQuery().FirstOrDefaultAsync(u => u.MobileNumber == mobile);
-            if (user == null) return false;
-
-            user.MobileActivationNumer = new Random().Next(10000, 99999).ToString();
-            await _smsService.SendVerificationSms(mobile, user.MobileActivationNumer);
-            return true;
-        }
         #endregion
 
         #region User Management

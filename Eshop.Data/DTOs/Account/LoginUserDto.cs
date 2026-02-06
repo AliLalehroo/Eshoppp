@@ -1,19 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Eshop.Data.DTOs.Account
 {
-    public class RegisterUserDTO
+    public class LoginUserDto
     {
         [Display(Name = "ایمیل")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         [EmailAddress(ErrorMessage = "فرمت ایمیل معتبر نیست")]
-        [MaxLength(320, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
         public string Email { get; set; } = string.Empty;
 
         [Display(Name = "رمز عبور")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
-        [MinLength(8, ErrorMessage = "{0} باید حداقل {1} کاراکتر باشد")]
-        [MaxLength(128, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
         public string Password { get; set; } = string.Empty;
 
         public string? ReturnUrl { get; set; }
