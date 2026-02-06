@@ -43,7 +43,9 @@ namespace Eshop.Application.Services.Implementations
 
         public bool CheckPermission(long permissionId, string mobile)
         {
-            var userId = _userRepository.GetQuery().Single(c => c.MobileNumber == mobile).Id;
+            var userId = _userRepository.GetQuery()
+                .Single(c => c.Email == mobile || c.MobileNumber == mobile)
+                .Id;
 
             var userRole = _userRoleRepository.GetQuery().AsQueryable()
                 .Where(c => c.UserId == userId).Select(r => r.RoleId).ToList();

@@ -4,11 +4,14 @@ namespace Eshop.Data.Entities.Account
 {
     public class User : BaseEntity
     {
-        public string MobileNumber { get; set; }
-        public string MobileActivationNumer { get; set; }
+        public string MobileNumber { get; set; } = string.Empty;
+        public string MobileActivationNumer { get; set; } = string.Empty;
+
+        public string PasswordHash { get; set; } = string.Empty;
+        public string PasswordSalt { get; set; } = string.Empty;
 
         public string? FullName { get; set; }
-        public string? Email { get; set; }
+        public string Email { get; set; } = string.Empty;
         public string? Address { get; set; }
         public string? PostCode { get; set; }
         public string? UserCity { get; set; }

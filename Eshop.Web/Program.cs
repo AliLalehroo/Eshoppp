@@ -5,6 +5,7 @@ using Eshop.Data.Repository;
 using GoogleReCaptcha.V3;
 using GoogleReCaptcha.V3.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Encodings.Web;
@@ -17,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient<ICaptchaValidator , GoogleReCaptchaValidator>();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
 builder.Services.AddScoped<IUserService , UserService>();
-builder.Services.AddScoped<ISmsService , SmsService>();
 builder.Services.AddScoped<IProductService , ProductService>();
 builder.Services.AddScoped<IOrderService , OrderService>();
 builder.Services.AddScoped<IPaymentService , PaymentService>();
@@ -49,10 +49,23 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 }).AddCookie(options =>
 {
-    options.LoginPath = "/register";
-    options.LogoutPath = "/log-out";
+    options.LoginPath = "/api/auth/login";
+    options.LogoutPath = "/api/auth/logout";
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
     options.SlidingExpiration = true;
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        },
+        OnRedirectToAccessDenied = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return Task.CompletedTask;
+        }
+    };
 });
 
 //Encoder 
@@ -83,5 +96,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllers();
 
 app.Run();
